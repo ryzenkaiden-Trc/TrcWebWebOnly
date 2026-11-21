@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0e">
+<title>TRC Service · Key Portal</title>
+<style>
+:root{--bg:#0b0b0e;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.10);--text:#f2f3f7;--sub:#9a9cab;--chrome:#ecf0f8;--ok:#6ee696;--bad:#ff6464;--warn:#ffbe50;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(900px 500px at 12% -10%,rgba(236,240,248,.09),transparent 60%),radial-gradient(700px 500px at 100% 8%,rgba(120,130,170,.10),transparent 60%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+a{color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--chrome);color:#0b0b0e;font-weight:800;font-size:13px;letter-spacing:.5px}
+.brand small{display:block;color:var(--sub);font-weight:500;font-size:12px;margin-top:-3px}
+nav{display:flex;gap:16px;font-size:14px;color:var(--sub)}
+nav a{text-decoration:none}
+nav a:hover{color:var(--text)}
+.hero{padding:34px 0 22px}
+.eyebrow{color:var(--sub);text-transform:uppercase;letter-spacing:.18em;font-size:12px;margin-bottom:10px}
+h1{font-size:clamp(34px,8vw,58px);line-height:1.05;letter-spacing:-.02em}
+.lead{color:var(--sub);max-width:560px;margin-top:14px}
+.plans{display:grid;gap:14px;margin:22px 0;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.plan{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;backdrop-filter:blur(12px);transition:transform .35s cubic-bezier(.2,.9,.3,1.3),border-color .3s}
+.plan:hover{transform:translateY(-4px);border-color:rgba(236,240,248,.35)}
+.plan.pop{border-color:rgba(236,240,248,.45)}
+.badge{position:absolute;top:16px;right:16px;font-size:11px;font-weight:700;background:var(--chrome);color:#0b0b0e;border-radius:999px;padding:3px 10px}
+.plan h3{font-size:18px}
+.price{font-size:30px;font-weight:800;margin:6px 0 14px}
+.plan ul{list-style:none;padding:0;margin-bottom:20px;display:grid;gap:9px;color:var(--sub);font-size:14px}
+.plan li::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--chrome);margin-right:10px;vertical-align:middle}
+.btn{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;border-radius:999px;padding:12px 20px;background:var(--chrome);color:#0b0b0e;transition:transform .15s,opacity .2s}
+.btn:active{transform:scale(.96)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--line)}
+.plan .btn{margin-top:auto}
+.panel,.gate{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;margin:22px 0;backdrop-filter:blur(12px)}
+.gate{position:relative;overflow:hidden}
+.gate::before{content:"";position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent 0 70%,rgba(236,240,248,.55) 85%,transparent 100%);animation:spin 7s linear infinite;z-index:0}
+.gate::after{content:"";position:absolute;inset:1px;border-radius:21px;background:#0e0e12;z-index:0}
+.gate>*{position:relative;z-index:1}
+@keyframes spin{to{transform:rotate(360deg)}}
+.steps{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;color:var(--sub)}
+.dot{display:flex;align-items:center;gap:8px}
+.dot i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);font-style:normal;font-weight:700;transition:.35s}
+.dot.on i{background:var(--chrome);color:#0b0b0e;border-color:var(--chrome)}
+.dot.done i{background:var(--ok);color:#06210f;border-color:var(--ok)}
+.bar{flex:1;height:1px;background:var(--line);min-width:12px}
+.gate h2{font-size:22px;margin-bottom:6px}
+.sub{color:var(--sub);font-size:14px}
+.tasks{display:grid;gap:10px;margin:16px 0}
+.task{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}
+.task.ok{border-color:rgba(110,230,150,.5)}
+input{width:100%;font:inherit;color:var(--text);background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:14px;padding:13px 15px;outline:none;transition:border-color .2s}
+input:focus{border-color:var(--chrome)}
+.row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.row input{flex:1;min-width:200px}
+.keybox{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.4);border:1px solid var(--line);border-radius:16px;padding:14px;margin:16px 0}
+.keybox code{flex:1;word-break:break-all;font:600 15px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.3px}
+.meta{display:flex;gap:18px;flex-wrap:wrap;color:var(--sub);font-size:14px;margin-top:8px}
+.meta b{color:var(--text)}
+.msg{margin-top:12px;font-size:14px;min-height:20px}
+.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}.msg.warn{color:var(--warn)}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:var(--chrome);animation:spin .8s linear infinite;display:inline-block;vertical-align:middle;margin-right:10px}
+footer{color:var(--sub);font-size:13px;text-align:center;padding:30px 0 40px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="logo">TRC</span><span>TRC Service<small>Key Portal</small></span></div>
+    <nav><a href="#plans">Plans</a><a href="#check">Check key</a><a id="discordLink" href="#" target="_blank" rel="noopener">Discord</a></nav>
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow">Key portal</p>
+    <h1>Pick a plan.<br>Grab your key.</h1>
+    <p class="lead">Keys are created on our own server and locked to your device. Free keys last 3 hours. Paid plans last longer.</p>
+  </section>
+
+  <section id="active" class="panel" hidden></section>
+  <section id="plans" class="plans"></section>
+  <section id="gate" class="gate" hidden></section>
+
+  <section id="check" class="panel">
+    <h2 style="font-size:20px">Check a key</h2>
+    <p class="sub">Paste any TRCKEY_ key to see its plan and time left.</p>
+    <div class="row">
+      <input id="checkInput" placeholder="TRCKEY_..." autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="btn" id="checkBtn">Check</button>
+    </div>
+    <p class="msg" id="checkMsg"></p>
+  </section>
+
+  <footer>© TRC Service · Keys are tied to one device. Do not share yours.</footer>
+</div>
+
+<script>
+const CONFIG = {
+  API: "https://trc-keys.YOUR_SUBDOMAIN.workers.dev",
+  DISCORD: "https://discord.gg/YOUR_INVITE",
+  CHECKPOINTS: [
+    { label: "Join the TRC Discord", url: "https://discord.gg/YOUR_INVITE", seconds: 10 },
+    { label: "Visit our YouTube channel", url: "https://youtube.com/@YOUR_CHANNEL", seconds: 10 }
+  ],
+  PRICES: { free: "Free", standard: "Paid", premium: "Paid" }
+};
+
+const PLANS = [
+  { id: "free", name: "Free", perks: ["Key lasts 3 hours", "New key every 24 hours", "2 quick checkpoints"], cta: "Get free key" },
+  { id: "standard", name: "Standard", pop: true, perks: ["Key lasts 10 hours", "New key every 5 hours", "No checkpoints", "Needs an access code"], cta: "Use access code" },
+  { id: "premium", name: "Premium", perks: ["Permanent key, use it anytime", "Special role in the TRC Discord", "Priority support"], cta: "Get Premium" }
+];
+
+const $ = (s, r = document) => r.querySelector(s);
+const API = CONFIG.API.replace(/\/$/, "");
+$("#discordLink").href = CONFIG.DISCORD;
+
+function fmt(ms) {
+  if (ms <= 0) return "0s";
+  const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+  return (h ? h + "h " : "") + (h || m ? String(m).padStart(h ? 2 : 1, "0") + "m " : "") + String(x).padStart(2, "0") + "s";
+}
+function tick() {
+  document.querySelectorAll("[data-until]").forEach(n => {
+    const u = Number(n.dataset.until);
+    n.textContent = !u ? "never" : u <= Date.now() ? (n.dataset.done || "now") : fmt(u - Date.now());
+  });
+}
+setInterval(tick, 1000);
+
+async function call(path, body) {
+  try {
+    const r = await fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    let data = {}; try { data = await r.json(); } catch (e) {}
+    return { status: r.status, data };
+  } catch (e) {
+    return { status: 0, data: { error: "Can't reach the key server. Try again in a moment." } };
+  }
+}
+function say(node, text, kind) { node.textContent = text || ""; node.className = "msg " + (kind || ""); }
+function save(d) { try { localStorage.setItem("trc.key", JSON.stringify(d)); } catch (e) {} }
+function load() { try { return JSON.parse(localStorage.getItem("trc.key")); } catch (e) { return null; } }
+
+function renderPlans() {
+  const box = $("#plans");
+  box.innerHTML = "";
+  PLANS.forEach(p => {
+    const c = document.createElement("article");
+    c.className = "plan" + (p.pop ? " pop" : "");
+    c.innerHTML = (p.pop ? '<span class="badge">Popular</span>' : "") +
+      "<h3></h3><div class='price'></div><ul></ul><button class='btn'></button>";
+    $("h3", c).textContent = p.name;
+    $(".price", c).textContent = CONFIG.PRICES[p.id];
+    p.perks.forEach(t => { const li = document.createElement("li"); li.textContent = t; $("ul", c).appendChild(li); });
+    const b = $("button", c);
+    b.textContent = p.cta;
+    b.onclick = () => p.id === "premium" ? window.open(CONFIG.DISCORD, "_blank", "noopener") : openGate(p.id);
+    box.appendChild(c);
+  });
+}
+
+function keyView(d, note) {
+  const wrap = document.createElement("div");
+  wrap.innerHTML = "<h2>Your key</h2><p class='sub'></p>" +
+    "<div class='keybox'><code></code><button class='btn ghost'>Copy</button></div>" +
+    "<div class='meta'><span>Plan <b></b></span><span>Expires in <b data-done='expired'></b></span><span>Next reset in <b></b></span></div>" +
+    "<p class='sub' style='margin-top:14px'>Paste this key into the TRC Service script.</p>";
+  $(".sub", wrap).textContent = note || "Keep it private. It locks to the first device that uses it.";
+  $("code", wrap).textContent = d.key;
+  const metas = wrap.querySelectorAll(".meta b");
+  metas[0].textContent = d.plan[0].toUpperCase() + d.plan.slice(1);
+  metas[1].dataset.until = d.expires || "";
+  metas[2].dataset.until = d.resetAt || "";
+  const cp = $("button", wrap);
+  cp.onclick = async () => {
+    try { await navigator.clipboard.writeText(d.key); } catch (e) {
+      const r = document.createRange(); r.selectNodeContents($("code", wrap));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    }
+    cp.textContent = "Copied!"; setTimeout(() => cp.textContent = "Copy", 1500);
+  };
+  return wrap;
+}
+
+function renderActive() {
+  const d = load(), box = $("#active");
+  if (!d || !d.key || (d.expires && d.expires <= Date.now())) { box.hidden = true; return; }
+  box.hidden = false; box.innerHTML = "";
+  box.appendChild(keyView(d, "Your active key"));
+  tick();
+}
+
+let gate = null;
+
+function stepper(n) {
+  const names = gate.plan === "free" ? ["Checkpoints", "Generate", "Key"] : ["Access code", "Generate", "Key"];
+  return "<div class='steps'>" + names.map((t, i) =>
+    "<span class='dot " + (i + 1 < n ? "done" : i + 1 === n ? "on" : "") + "'><i>" + (i + 1 < n ? "✓" : i + 1) + "</i>" + t + "</span>" +
+    (i < 2 ? "<span class='bar'></span>" : "")).join("") + "</div>";
+}
+
+async function openGate(plan) {
+  gate = { plan, token: null, minWait: 0, start: Date.now(), done: new Set() };
+  const g = $("#gate");
+  g.hidden = false;
+  g.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (plan === "free") {
+    g.innerHTML = stepper(1) + "<p class='sub'><span class='spin'></span>Starting a secure session…</p>";
+    const r = await call("/api/session", { plan });
+    if (r.status !== 200) { g.innerHTML = stepper(1) + "<p class='msg bad'></p>"; say($(".msg", g), r.data.error || "Could not start a session.", "bad"); return; }
+    gate.token = r.data.token; gate.minWait = r.data.minWait; gate.start = Date.now();
+  }
+  stepOne();
+}
+
+function stepOne() {
+  const g = $("#gate");
+  if (gate.plan === "free") {
+    g.innerHTML = stepper(1) + "<h2>Complete the checkpoints</h2><p class='sub'>Open each one and stay for the timer. Then continue.</p><div class='tasks'></div>" +
+      "<button class='btn' id='go' disabled>Continue</button><p class='msg' id='gmsg'></p>";
+    CONFIG.CHECKPOINTS.forEach((c, i) => {
+      const t = document.createElement("div");
+      t.className = "task";
+      t.innerHTML = "<span></span><button class='btn ghost'>Open</button>";
+      $("span", t).textContent = c.label;
+      const b = $("button", t);
+      b.onclick = () => {
+        window.open(c.url, "_blank", "noopener");
+        b.disabled = true;
+        let left = c.seconds;
+        b.textContent = left + "s";
+        const iv = setInterval(() => {
+          left--;
+          if (left > 0) { b.textContent = left + "s"; return; }
+          clearInterval(iv);
+          b.textContent = "Done ✓"; t.classList.add("ok");
+          gate.done.add(i); refreshGo();
+        }, 1000);
+      };
+      $(".tasks", g).appendChild(t);
+    });
+    $("#go").onclick = generate;
+    const iv = setInterval(() => { if (!$("#go")) return clearInterval(iv); refreshGo(); }, 500);
+  } else {
+    g.innerHTML = stepper(1) + "<h2>Enter your access code</h2><p class='sub'>Standard plan access codes are issued after purchase. Ask on our Discord.</p>" +
+      "<div class='row'><input id='lic' placeholder='TRCPASS_...' autocomplete='off' autocapitalize='off' spellcheck='false'><button class='btn' id='go'>Continue</button></div><p class='msg' id='gmsg'></p>";
+    $("#go").onclick = generate;
+    $("#lic").onkeydown = e => { if (e.key === "Enter") generate(); };
+  }
+}
+
+function refreshGo() {
+  const go = $("#go");
+  if (!go || gate.plan !== "free") return;
+  const wait = Math.max(0, Math.ceil(gate.minWait - (Date.now() - gate.start) / 1000));
+  const all = gate.done.size === CONFIG.CHECKPOINTS.length;
+  go.disabled = !(all && wait === 0);
+  go.textContent = all && wait > 0 ? "Continue (" + wait + "s)" : "Continue";
+}
+
+async function generate() {
+  const g = $("#gate");
+  const body = { plan: gate.plan, token: gate.token, license: gate.plan === "standard" ? ($("#lic").value || "").trim() : undefined };
+  if (gate.plan === "standard" && !body.license) return say($("#gmsg"), "Enter your access code.", "bad");
+  g.innerHTML = stepper(2) + "<p class='sub'><span class='spin'></span>Generating your key…</p>";
+  const r = await call("/api/generate", body);
+  if (r.status === 200 && r.data.key) {
+    save(r.data); g.innerHTML = stepper(4); g.appendChild(keyView(r.data)); renderActive(); tick(); return;
+  }
+  if (r.data.error === "cooldown") {
+    g.innerHTML = stepper(3);
+    if (r.data.key) {
+      const d = { key: r.data.key, plan: r.data.plan, expires: r.data.expires, resetAt: r.data.retryAt };
+      save(d); g.appendChild(keyView(d, "You already have a key. A new one unlocks when the reset timer ends."));
+      renderActive();
+    } else {
+      const p = document.createElement("p"); p.className = "msg warn";
+      p.innerHTML = "Your last key has expired. A new one unlocks in <b data-until='" + r.data.retryAt + "'></b>.";
+      g.appendChild(p);
+    }
+    tick(); return;
+  }
+  g.innerHTML = stepper(1) + "<p class='msg bad' id='gmsg'></p><button class='btn ghost' id='back' style='margin-top:12px'>Try again</button>";
+  say($("#gmsg"), r.data.error || "Something went wrong.", "bad");
+  $("#back").onclick = () => openGate(gate.plan);
+}
+
+$("#checkBtn").onclick = async () => {
+  const key = $("#checkInput").value.trim(), m = $("#checkMsg");
+  if (!key) return say(m, "Paste a key first.", "bad");
+  say(m, "Checking…");
+  const r = await call("/api/status", { key });
+  if (r.data.valid) {
+    const plan = r.data.plan[0].toUpperCase() + r.data.plan.slice(1);
+    m.className = "msg ok";
+    m.innerHTML = "Valid · " + plan + " plan · expires in <b data-done='expired' data-until='" + (r.data.expires || "") + "'></b>" + (r.data.bound ? " · locked to a device" : "");
+    tick();
+  } else say(m, r.data.reason || r.data.error || "Invalid key.", "bad");
+};
+$("#checkInput").onkeydown = e => { if (e.key === "Enter") $("#checkBtn").click(); };
+
+renderPlans();
+renderActive();
+tick();
+</script>
+</body>
+</html>
